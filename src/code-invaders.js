@@ -294,12 +294,30 @@ export class CodeInvadersGame {
                         opacity: 1
                     });
 
-                    if (Math.random() < 0.1) {
-                        const powerUpTypes = ['☕', '💡', '🚀'];
+                    if (Math.random() < 0.12) {
+                        const powerUpTypes = [
+                            { type: '☕', weight: 40 },   // Kaffee: Leben + Punkte (40%)
+                            { type: '💡', weight: 35 },  // Idee: Nur Punkte (35%)
+                            { type: '🚀', weight: 20 },  // Boost: Nur Punkte (20%)
+                            { type: '❤️', weight: 5 }    // Herz: Leben + Bonus (5%)
+                        ];
+
+                        const totalWeight = powerUpTypes.reduce((sum, item) => sum + item.weight, 0);
+                        let random = Math.random() * totalWeight;
+                        let selectedPowerUp = powerUpTypes[0];
+
+                        for (const powerUp of powerUpTypes) {
+                            random -= powerUp.weight;
+                            if (random <= 0) {
+                                selectedPowerUp = powerUp;
+                                break;
+                            }
+                        }
+
                         this.powerUps.push({
                             x: invader.x,
                             y: invader.y,
-                            type: powerUpTypes[Math.floor(Math.random() * powerUpTypes.length)],
+                            type: selectedPowerUp.type,
                             width: 20,
                             height: 20
                         });
@@ -331,13 +349,14 @@ export class CodeInvadersGame {
         }
 
         if (this.bonusLogo) {
-            this.bullets.forEach((bullet, bulletIndex) => {
+            for (let i = this.bullets.length - 1; i >= 0; i--) {
+                const bullet = this.bullets[i];
                 if (bullet.x < this.bonusLogo.x + this.bonusLogo.width &&
                     bullet.x + bullet.width > this.bonusLogo.x &&
                     bullet.y < this.bonusLogo.y + this.bonusLogo.height &&
                     bullet.y + bullet.height > this.bonusLogo.y) {
 
-                    this.bullets.splice(bulletIndex, 1);
+                    this.bullets.splice(i, 1);
                     this.score += 500;
                     this.lives++;
 
@@ -350,8 +369,9 @@ export class CodeInvadersGame {
                     });
 
                     this.bonusLogo = null;
+                    break;
                 }
-            });
+            }
         }
 
         this.powerUps.forEach((powerUp, powerUpIndex) => {
@@ -365,12 +385,17 @@ export class CodeInvadersGame {
                 switch (powerUp.type) {
                     case '☕':
                         this.lives++;
+                        this.score += 25;
                         break;
                     case '💡':
-                        this.score += 50;
+                        this.score += 75;
                         break;
                     case '🚀':
-                        this.score += 100;
+                        this.score += 150;
+                        break;
+                    case '❤️':
+                        this.lives++;
+                        this.score += 300;
                         break;
                 }
             }

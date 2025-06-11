@@ -1,7 +1,7 @@
 {
   "name": "code-invaders-easter-egg",
-  "version": "1.0.0@beta",
-  "description": "Tobeworks Code Invaders Easter Egg - Space Invaders mit Bugs und deinem Logo",
+  "version": "1.1.0@alpha",
+  "description": "Tobeworks Code Invaders Easter Egg",
   "type": "module",
   "main": "dist/code-invaders.umd.js",
   "module": "dist/code-invaders.es.js",
