@@ -1,4 +1,5 @@
 import { CodeInvadersGame } from './code-invaders.js';
+import packageJson from '../package.json';
 
 class CodeInvadersElement extends HTMLElement {
     constructor() {
@@ -9,6 +10,7 @@ class CodeInvadersElement extends HTMLElement {
     connectedCallback() {
         const width = this.getAttribute('width') || '800';
         const height = this.getAttribute('height') || '600';
+        const showVersion = this.getAttribute('show-version') !== 'false';
 
         this.innerHTML = `
             <style>
@@ -20,6 +22,16 @@ class CodeInvadersElement extends HTMLElement {
                     background: #0a0a0a;
                     padding: 20px;
                     border-radius: 10px;
+                }
+                
+                .version-info {
+                    position: absolute;
+                    top: 5px;
+                    right: 10px;
+                    font-size: 10px;
+                    color: #ffb380;
+                    opacity: 0.7;
+                    pointer-events: none;
                 }
                 
                 .instructions {
@@ -106,11 +118,20 @@ class CodeInvadersElement extends HTMLElement {
                 .contact-link:hover {
                     color: #ffb380;
                 }
+                
+                .version-footer {
+                    margin-top: 10px;
+                    font-size: 11px;
+                    color: #666;
+                    opacity: 0.6;
+                }
             </style>
             
             <div class="game-container">
+                ${showVersion ? `<div class="version-info">v${packageJson.version}</div>` : ''}
+                
                 <div class="instructions">
-                    <h2>🚀 CODE INVADERS - TOBEWORKS 🚀</h2>
+                    <h2>🚀 CODE INVADERS 🚀</h2>
                     <p>Pfeiltasten: Bewegen | Leertaste: Schießen | Eliminiere alle Bugs!</p>
                 </div>
                 
@@ -131,6 +152,8 @@ class CodeInvadersElement extends HTMLElement {
                         <a href="https://tobeworks.de/kontakt" class="contact-link" target="_blank">Lust auf echte Webentwicklung? 💻</a>
                     </div>
                 </div>
+                
+                ${showVersion ? `<div class="version-footer">Code Invaders v${packageJson.version} - Built with ❤️ for Tobeworks</div>` : ''}
             </div>
         `;
 

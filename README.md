@@ -1,6 +1,6 @@
 # 🚀 Code Invaders - Tobeworks Easter Egg
 
-A Space Invaders-inspired browser game as an Easter Egg for the Tobeworks homepage. Built with Vanilla JavaScript and Canvas API.
+A Space Invaders-inspired browser game as an Easter Egg. Built with Vanilla JavaScript and Canvas API.
 
 ## ✨ Features
 
