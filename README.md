@@ -1,4 +1,4 @@
-# 🚀 Code Invaders - Tobeworks Easter Egg
+# 🚀 Code Invaders -  Easter Egg Game
 
 A Space Invaders-inspired browser game as an Easter Egg. Built with Vanilla JavaScript and Canvas API.
 
@@ -101,5 +101,3 @@ After `pnpm build`:
 MIT License - Tobias Lorsbach / Tobeworks
 
 ---
-
-**Built with ❤️ and ☕ for Tobeworks**
