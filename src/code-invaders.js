@@ -363,9 +363,11 @@ export class CodeInvadersGame {
                     this.explosions.push({
                         x: this.bonusLogo.x + this.bonusLogo.width / 2,
                         y: this.bonusLogo.y + this.bonusLogo.height / 2,
-                        timer: 30,
-                        scale: 1,
-                        opacity: 1
+                        timer: 40,
+                        scale: 0.5,
+                        opacity: 1,
+                        type: 'logo',
+                        powerUpType: 'logo'
                     });
 
                     this.bonusLogo = null;
@@ -381,6 +383,29 @@ export class CodeInvadersGame {
                 powerUp.y + powerUp.height > this.player.y) {
 
                 this.powerUps.splice(powerUpIndex, 1);
+
+                // PowerUp Catch Animation erstellen
+                let animationType = 'powerup';
+                let animationTimer = 25;
+
+                // Besondere Animationen für wertvollere PowerUps
+                if (powerUp.type === '❤️') {
+                    animationType = 'heart';
+                    animationTimer = 30;
+                } else if (powerUp.type === '🚀') {
+                    animationType = 'boost';
+                    animationTimer = 28;
+                }
+
+                this.explosions.push({
+                    x: powerUp.x + powerUp.width / 2,
+                    y: powerUp.y + powerUp.height / 2,
+                    timer: animationTimer,
+                    scale: 0.3,
+                    opacity: 1,
+                    type: animationType,
+                    powerUpType: powerUp.type
+                });
 
                 switch (powerUp.type) {
                     case '☕':
@@ -503,16 +528,117 @@ export class CodeInvadersGame {
             this.ctx.translate(explosion.x, explosion.y);
             this.ctx.scale(explosion.scale, explosion.scale);
 
-            this.ctx.fillStyle = '#ff8c42';
-            this.ctx.font = '30px Courier New';
-            this.ctx.fillText('💥', -15, 10);
+            if (explosion.type === 'logo') {
+                // MEGA LOGO ANIMATION - Spektakulär!
+                this.ctx.fillStyle = '#ff8c42';
+                this.ctx.font = 'bold 32px Courier New';
+                this.ctx.fillText('🎉', -16, 10);
 
-            this.ctx.fillStyle = '#ffb380';
-            this.ctx.font = '20px Courier New';
-            this.ctx.fillText('*', -20, -10);
-            this.ctx.fillText('*', 10, -5);
-            this.ctx.fillText('*', -5, 20);
-            this.ctx.fillText('*', 15, 15);
+                // Mega Sparkle-Ring
+                const sparkles = ['✨', '⭐', '💫', '🌟', '💥', '🎆'];
+                for (let i = 0; i < 6; i++) {
+                    const angle = (explosion.timer * 2 + i * 60) * 0.1;
+                    const radius = 40 + Math.sin(explosion.timer * 0.2) * 20;
+                    const x = Math.cos(angle) * radius;
+                    const y = Math.sin(angle) * radius;
+                    this.ctx.font = '20px Courier New';
+                    this.ctx.fillStyle = i % 2 === 0 ? '#ff8c42' : '#ffb380';
+                    this.ctx.fillText(sparkles[i], x - 10, y + 10);
+                }
+
+                // Bonus Text - MEGA REWARD
+                this.ctx.fillStyle = '#00ff00';
+                this.ctx.font = 'bold 16px Courier New';
+                this.ctx.strokeStyle = '#000000';
+                this.ctx.lineWidth = 2;
+                this.ctx.strokeText('MEGA BONUS!', -40, -30);
+                this.ctx.fillText('MEGA BONUS!', -40, -30);
+                this.ctx.strokeText('+500 +LIFE', -30, -10);
+                this.ctx.fillText('+500 +LIFE', -30, -10);
+
+            } else if (explosion.type === 'heart') {
+                // HERZ ANIMATION - Besonders
+                this.ctx.fillStyle = '#ff1744';
+                this.ctx.font = '28px Courier New';
+                this.ctx.fillText('❤️', -14, 10);
+
+                // Herz-Sparkles
+                const heartSparkles = ['💖', '💕', '💗', '✨'];
+                for (let i = 0; i < 4; i++) {
+                    const angle = (explosion.timer + i * 90) * 0.15;
+                    const radius = 25 + Math.sin(explosion.timer * 0.4) * 10;
+                    const x = Math.cos(angle) * radius;
+                    const y = Math.sin(angle) * radius;
+                    this.ctx.font = '16px Courier New';
+                    this.ctx.fillText(heartSparkles[i], x - 8, y + 8);
+                }
+
+                this.ctx.fillStyle = '#ff1744';
+                this.ctx.font = 'bold 14px Courier New';
+                this.ctx.fillText('+LIFE +300', -25, -20);
+
+            } else if (explosion.type === 'boost') {
+                // BOOST ANIMATION - Dynamisch
+                this.ctx.fillStyle = '#00ff41';
+                this.ctx.font = '26px Courier New';
+                this.ctx.fillText('🚀', -13, 10);
+
+                // Speed-Lines
+                this.ctx.strokeStyle = '#00ff41';
+                this.ctx.lineWidth = 2;
+                for (let i = 0; i < 8; i++) {
+                    const angle = (i * 45) * Math.PI / 180;
+                    const speed = explosion.timer * 0.5;
+                    this.ctx.beginPath();
+                    this.ctx.moveTo(Math.cos(angle) * 15, Math.sin(angle) * 15);
+                    this.ctx.lineTo(Math.cos(angle) * (25 + speed), Math.sin(angle) * (25 + speed));
+                    this.ctx.stroke();
+                }
+
+                this.ctx.fillStyle = '#00ff41';
+                this.ctx.font = 'bold 12px Courier New';
+                this.ctx.fillText('+150', -15, -20);
+
+            } else if (explosion.type === 'powerup') {
+                // Standard PowerUp Animation
+                this.ctx.fillStyle = '#ff8c42';
+                this.ctx.font = '24px Courier New';
+                this.ctx.fillText(explosion.powerUpType, -12, 8);
+
+                // Standard Sparkles
+                this.ctx.fillStyle = '#ffb380';
+                this.ctx.font = '16px Courier New';
+                const sparkles = ['✨', '⭐', '💫'];
+                for (let i = 0; i < 3; i++) {
+                    const angle = (explosion.timer + i * 120) * 0.1;
+                    const radius = 20 + Math.sin(explosion.timer * 0.3) * 10;
+                    const x = Math.cos(angle) * radius;
+                    const y = Math.sin(angle) * radius;
+                    this.ctx.fillText(sparkles[i], x - 8, y + 8);
+                }
+
+                this.ctx.fillStyle = '#00ff00';
+                this.ctx.font = 'bold 12px Courier New';
+                let bonusText = '';
+                switch (explosion.powerUpType) {
+                    case '☕': bonusText = '+LIFE +25'; break;
+                    case '💡': bonusText = '+75'; break;
+                }
+                this.ctx.fillText(bonusText, -20, -20);
+
+            } else {
+                // Normale Bug-Explosion
+                this.ctx.fillStyle = '#ff8c42';
+                this.ctx.font = '30px Courier New';
+                this.ctx.fillText('💥', -15, 10);
+
+                this.ctx.fillStyle = '#ffb380';
+                this.ctx.font = '20px Courier New';
+                this.ctx.fillText('*', -20, -10);
+                this.ctx.fillText('*', 10, -5);
+                this.ctx.fillText('*', -5, 20);
+                this.ctx.fillText('*', 15, 15);
+            }
 
             this.ctx.restore();
         });
@@ -613,4 +739,4 @@ export class CodeInvadersGame {
         this.render();
         requestAnimationFrame(() => this.gameLoop());
     }
-}
+}   
