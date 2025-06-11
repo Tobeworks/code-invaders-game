@@ -1,0 +1,36 @@
+{
+  "name": "code-invaders-easter-egg",
+  "version": "1.0.0",
+  "description": "Tobeworks Code Invaders Easter Egg - Space Invaders mit Bugs und deinem Logo",
+  "type": "module",
+  "main": "dist/code-invaders.umd.js",
+  "module": "dist/code-invaders.es.js",
+  "files": [
+    "dist"
+  ],
+  "scripts": {
+    "dev": "vite",
+    "build": "vite build",
+    "preview": "vite preview",
+    "serve": "vite preview --port 4173"
+  },
+  "keywords": [
+    "game",
+    "easter-egg",
+    "space-invaders",
+    "web-component",
+    "canvas"
+  ],
+  "author": "Tobias Lorsbach - Tobeworks",
+  "license": "MIT",
+  "devDependencies": {
+    "terser": "^5.42.0",
+    "vite": "^5.0.0"
+  },
+  "exports": {
+    ".": {
+      "import": "./dist/code-invaders.es.js",
+      "require": "./dist/code-invaders.umd.js"
+    }
+  }
+}
