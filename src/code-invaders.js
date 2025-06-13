@@ -31,6 +31,12 @@ export class CodeInvadersGame {
         this.invaderMoveTimer = 0;
         this.invaderMoveDelay = 60;
 
+        // Framerate Control
+        this.targetFPS = 60;
+        this.frameTime = 1000 / this.targetFPS; // 16.67ms für 60 FPS
+        this.lastFrameTime = 0;
+        this.accumulator = 0;
+
         this.bugTypes = ['🐛', '🐞', '🕷️', '🦗', '🪲'];
         this.bugNames = ['ERROR', '404', 'NULL', 'CRASH', 'SPAM'];
 
@@ -729,14 +735,32 @@ export class CodeInvadersGame {
         this.player.x = 400;
         this.player.y = 550;
 
+        // Reset framerate timer
+        this.lastFrameTime = performance.now();
+        this.accumulator = 0;
+
         this.createInvaders();
         const gameOverEl = document.getElementById('gameOver');
         if (gameOverEl) gameOverEl.style.display = 'none';
     }
 
     gameLoop() {
-        this.update();
+        const currentTime = performance.now();
+        const deltaTime = currentTime - this.lastFrameTime;
+        this.lastFrameTime = currentTime;
+
+        // Accumulator pattern für konstante Framerate
+        this.accumulator += deltaTime;
+
+        // Update nur mit fester Framerate (60 FPS)
+        while (this.accumulator >= this.frameTime) {
+            this.update();
+            this.accumulator -= this.frameTime;
+        }
+
+        // Render immer (kann variable sein für smooth visuals)
         this.render();
+
         requestAnimationFrame(() => this.gameLoop());
     }
-}   
+}
